@@ -1,11 +1,17 @@
 name: CI
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - '**'
     paths-ignore:
       - "README.md"
       # - ".github/workflows/**"
+#  pull_request:
+#    types: [opened, synchronize, reopened]
+#    paths-ignore:
+#      - "README.md"
+#      # - ".github/workflows/**"
 
 jobs:
   build-and-test:
