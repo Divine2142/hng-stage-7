@@ -26,9 +26,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Delay Start
-        run: sleep 30
-        
       - name: Release to GitHub
         uses: cycjimmy/semantic-release-action@v4
         with:
