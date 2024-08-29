@@ -1,0 +1,41 @@
+name: Release
+on:
+  push:
+    branches:
+      - dev
+  
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for Running Workflows
+        id: check_workflows
+        run: |
+          runs=$(gh api -X GET /repos/${{ github.repository }}/actions/runs -F status=in_progress -q '.workflow_runs | length')
+          if [ "$runs" -gt 0 ]; then
+            echo "Another workflow is currently running."
+            exit 1
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delay Start
+        run: sleep 30
+        
+      - name: Release to GitHub
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+            extra_plugins: |
+                @semantic-release/changelog@6.0.0
+                @semantic-release/git
+            branches: |
+                ['production']
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
